@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Porquinho - Meta Financeira</title>
+    <style>
+      :root {
+        --bg: #f6f8fb;
+        --card: #ffffff;
+        --accent: #f97316;
+        --muted: #6b7280;
+        --success: #10b981;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto,
+          "Helvetica Neue", Arial;
+        overflow: hidden;
+      }
+      body {
+        background: linear-gradient(180deg, var(--bg), #eaf2ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        width: 100%;
+        height: 100vh;
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(12, 38, 63, 0.12);
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 24px;
+      }
+      .left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+      .pig-card {
+        width: 100%;
+        background: linear-gradient(180deg, #fff, #fff7f2);
+        border-radius: 12px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+      .coin {
+        width: 30px;
+        height: 30px;
+        animation: rotateCoin 3s ease-in-out infinite;
+      }
+      @keyframes rotateCoin {
+        0% {
+          transform: rotateY(0deg);
+        }
+        50% {
+          transform: rotateY(360deg);
+        }
+        100% {
+          transform: rotateY(0deg);
+        }
+      }
+      .pig {
+        width: 100px;
+        height: 100px;
+      }
+
+      .progress-wrap {
+        width: 100%;
+      }
+      .progress {
+        height: 16px;
+        background: #f3f4f6;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress > i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), #ffb86b);
+        width: 0%;
+      }
+      .stats {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .stat {
+        flex: 1;
+        background: rgba(0, 0, 0, 0.02);
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .stat strong {
+        display: block;
+        font-size: 1.05rem;
+      }
+      .right {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      form {
+        display: grid;
+        gap: 10px;
+      }
+      label {
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+      input[type="text"],
+      input[type="number"],
+      input[type="date"],
+      select {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #e6e9ee;
+        font-size: 1rem;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+      .row > * {
+        flex: 1;
+      }
+      button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .result-card {
+        background: linear-gradient(180deg, #fff, #f8fffe);
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+      .big {
+        font-size: 1.35rem;
+        font-weight: 700;
+      }
+      footer {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+      @media (max-width: 880px) {
+        .container {
+          grid-template-columns: 1fr;
+          max-width: 680px;
+        }
+        .pig-svg {
+          width: 220px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container" aria-label="Porquinho - Meta Financeira">
+      <section class="left">
+        <div class="pig-card" role="img" aria-label="Porquinho economizando">
+          <img src="icons/moeda.png" alt="moedas" class="coin" />
+          <img
+            src="icons/caixa-de-dinheiro (1).png"
+            alt="porquinho"
+            class="pig"
+          />
+
+          <div style="width: 100%">
+            <div class="progress-wrap">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 8px;
+                "
+              >
+                <div class="muted">Progresso</div>
+                <div id="percentLabel" class="muted">0%</div>
+              </div>
+              <div class="progress" aria-hidden="true">
+                <i id="progressBar"></i>
+              </div>
+            </div>
+            <div class="stats" style="margin-top: 10px">
+              <div class="stat">
+                <div class="muted">Meta</div>
+                <strong id="metaDisplay">R$ 0,00</strong>
+              </div>
+              <div class="stat">
+                <div class="muted">Atual</div>
+                <strong id="currentDisplay">R$ 0,00</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer>
+          Salve seus dados no navegador — eles ficam em seu computador
+          (localStorage).
+        </footer>
+      </section>
+
+      <section class="right">
+        <div class="result-card">
+          <div class="muted">Configure sua meta</div>
+          <form id="goalForm">
+            <label for="goalValue">Valor da meta (R$)</label>
+            <input
+              type="number"
+              id="goalValue"
+              min="0"
+              step="0.01"
+              value="5000"
+            />
+
+            <label for="currentValue">Valor atual (R$)</label>
+            <input
+              type="number"
+              id="currentValue"
+              min="0"
+              step="0.01"
+              value="1200"
+            />
+
+            <div class="row">
+              <div>
+                <label for="monthlyValue">Contribuição mensal (R$)</label>
+                <input
+                  type="number"
+                  id="monthlyValue"
+                  min="0"
+                  step="0.01"
+                  value="300"
+                />
+              </div>
+              <div>
+                <label for="targetDate">Data alvo (opcional)</label>
+                <input type="date" id="targetDate" />
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 6px">
+              <button type="button" id="calcBtn">Calcular</button>
+              <button type="button" id="saveBtn" style="background: #6b7280">
+                Salvar localmente
+              </button>
+              <button type="button" id="resetBtn" style="background: #ef4444">
+                Limpar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="result-card" style="margin-top: 12px">
+          <div class="muted">Resultado</div>
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              align-items: center;
+              margin-top: 8px;
+            "
+          >
+            <div style="flex: 1">
+              <div class="big" id="monthsToGoal">—</div>
+              <div class="muted">
+                Quanto tempo falta (com contribuições mensais)
+              </div>
+            </div>
+            <div style="width: 160px; text-align: right">
+              <div class="muted">Faltam</div>
+              <div class="big" id="amountLeft">R$ 0,00</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 30px" id="countdownBlock">
+            <div class="muted">Se você definiu uma data alvo:</div>
+            <div
+              style="
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                margin-top: 8px;
+              "
+            >
+              <div style="flex: 1">
+                <div id="dateLeft" class="big">—</div>
+                <div class="muted">Dias restantes até a data alvo</div>
+              </div>
+              <div style="width: 120px; text-align: right">
+                <div class="muted">Meta mensal sugerida</div>
+                <div id="suggestMonthly" class="big">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Utilitários
+      const fmt = (v) =>
+        v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+      const $ = (id) => document.getElementById(id);
+      const progressBar = $("progressBar");
+      const percentLabel = $("percentLabel");
+      const metaDisplay = $("metaDisplay");
+      const currentDisplay = $("currentDisplay");
+      const monthsToGoal = $("monthsToGoal");
+      const amountLeft = $("amountLeft");
+      const dateLeft = $("dateLeft");
+      const suggestMonthly = $("suggestMonthly");
+      const countdownBlock = $("countdownBlock");
+
+      // Carregar dados do localStorage
+      function load() {
+        try {
+          const raw = localStorage.getItem("porquinho.meta");
+          if (!raw) return;
+          const data = JSON.parse(raw);
+          $("goalValue").value = data.goal ?? 5000;
+          $("currentValue").value = data.current ?? 0;
+          $("monthlyValue").value = data.monthly ?? 100;
+          $("targetDate").value = data.targetDate ?? "";
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function save() {
+        const data = {
+          goal: Number($("goalValue").value) || 0,
+          current: Number($("currentValue").value) || 0,
+          monthly: Number($("monthlyValue").value) || 0,
+          targetDate: $("targetDate").value || "",
+        };
+        localStorage.setItem("porquinho.meta", JSON.stringify(data));
+        alert("Dados salvos no navegador.");
+      }
+
+      function reset() {
+        if (confirm("Limpar dados e voltar aos valores padrão?")) {
+          localStorage.removeItem("porquinho.meta");
+          $("goalValue").value = 5000;
+          $("currentValue").value = 0;
+          $("monthlyValue").value = 300;
+          $("targetDate").value = "";
+          render();
+        }
+      }
+
+      function calc() {
+        const goal = Number($("goalValue").value) || 0;
+        const current = Number($("currentValue").value) || 0;
+        const monthly = Number($("monthlyValue").value) || 0;
+        const needed = Math.max(0, goal - current);
+        // meses necessários arredondando para cima
+        let months = null;
+        if (monthly <= 0) months = Infinity;
+        else months = Math.ceil(needed / monthly);
+
+        monthsToGoal.textContent =
+          months === Infinity
+            ? "—"
+            : months + " mês" + (months > 1 ? "es" : "");
+        amountLeft.textContent = fmt(needed);
+
+        // Percentual
+        const percent =
+          goal <= 0 ? 0 : Math.min(100, Math.round((current / goal) * 100));
+        progressBar.style.width = percent + "%";
+        percentLabel.textContent = percent + "%";
+        metaDisplay.textContent = fmt(goal);
+        currentDisplay.textContent = fmt(current);
+
+        // Se data alvo definida, calcule dias restantes e sugestão mensal
+        const target = $("targetDate").value;
+        if (target) {
+          countdownBlock.style.display = "block";
+          const now = new Date();
+          const t = new Date(target + "T23:59:59");
+          const msLeft = t - now;
+          const days = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
+          dateLeft.textContent = days + " dia" + (days !== 1 ? "s" : "");
+          // Sugestão mensal para atingir em X meses
+          const monthsLeft = Math.max(1, Math.ceil(days / 30));
+          const suggested = Math.ceil((needed / monthsLeft) * 100) / 100;
+          suggestMonthly.textContent = fmt(suggested || 0);
+        } else {
+          countdownBlock.style.display = "none";
+        }
+      }
+
+      function render() {
+        calc();
+      }
+
+      // Eventos
+      document.addEventListener("DOMContentLoaded", () => {
+        load();
+        render();
+        $("calcBtn").addEventListener("click", () => {
+          render();
+        });
+        $("saveBtn").addEventListener("click", () => {
+          save();
+        });
+        $("resetBtn").addEventListener("click", () => {
+          reset();
+        });
+
+        // auto-render on input change (debounced)
+        let t = null;
+        ["goalValue", "currentValue", "monthlyValue", "targetDate"].forEach(
+          (id) => {
+            $(id).addEventListener("input", () => {
+              clearTimeout(t);
+              t = setTimeout(render, 250);
+            });
+          }
+        );
+
+        // Animação simples da moeda — loop
+        const coin = document.getElementById("coin");
+        let dir = 1,
+          x = 20;
+        setInterval(() => {
+          x += 2 * dir;
+          if (x > 42 || x < 6) dir *= -1;
+          coin.setAttribute("transform", "translate(" + x + ",20)");
+        }, 80);
+      });
+    </script>
+  </body>
+</html>
